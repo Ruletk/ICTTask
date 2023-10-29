@@ -1,0 +1,24 @@
+<div class="search-bar">
+    <form class="search-form" method="post">
+        {% csrf_token %}
+        <div class="item">
+            <img src="https://via.placeholder.com/30x30" alt="Image"/>
+            <input type="text" class="input" placeholder="Job or key words">
+        </div>
+
+
+        <div class="item">
+            <div class="line"></div>
+            <img src="https://via.placeholder.com/30x30" alt="Image"/>
+            <input type="text" class="input" placeholder="Location">
+        </div>
+
+
+        <div class="item">
+            <div class="line"></div>
+            <img src="https://via.placeholder.com/30x30" alt="Image"/>
+            <input type="text" class="input" placeholder="Salary">
+        </div>
+        <input type="submit" class="search" value="Search">
+    </form>
+</div>

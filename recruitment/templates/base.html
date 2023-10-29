@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <a href="{% url 'index' %}"><img class="logo" src="https://via.placeholder.com/175x97"/></a>
+        <div class="items">
+            <a href="" class="nav-button">Vacancies</a>
+            <a href="" class="nav-button">Jobs</a>
+            <a href="" class="nav-button">Companies</a>
+            <a href="" class="nav-button">Blog</a>
+        </div>
+
+        <div class="login-reg">
+            <a href="" class="nav-button rectangle">Register</a>
+            <a href="" class="nav-button">Login</a>
+        </div>
+    </div>
+
+
+    <div class="content">
+        {% block before_content %}
+        {% endblock %}
+
+
+        <div class="wrapper">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+</body>
+</html>

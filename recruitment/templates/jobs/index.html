@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+
+{% block before_content %}
+    {% include 'snippets/search_bar.html' %}
+{% endblock %}
+
+
+{% block content %}
+    {% if not vacancies %}
+        <div class="card">There's no more vacancies</div>
+    {% endif %}
+
+    {% for vacancy in vacancies %}
+    <div class="card">
+        <a class="vacancy-title" href="{{ vacancy.get_absolute_url }}">{{ vacancy.title }}</a>
+    </div>
+    {% endfor %}
+{% endblock %}
