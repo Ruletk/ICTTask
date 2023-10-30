@@ -1,5 +1,23 @@
 {% extends 'base.html' %}
 
-{% block content %}
-    {{ vacancy }}
+{% block before_content %}
+    <div class="vacancy-detail">
+        <h1>{{ vacancy.title }}</h1>
+        <p class="vacancy-salary">${{ vacancy.salary|stringformat:"d" }}</p>
+        <p>{{ vacancy.published_at }}</p>
+        {% if vacancy.possibilities %}
+            <div class="possibilities">
+            {% for possibility in vacancy.possibilities.all %}
+                <a style="background-color: {{ possibility.background_color }}; color: {{ possibility.text_color }}" href="{{ possibility.get_absolute_url }}">{{ possibility }}</a>
+            {% endfor %}
+            </div>
+        {% endif %}
+        <div class="company">
+            <a href="{{ vacancy.company.get_absolute_url }}">{{ vacancy.company }}</a>
+            <p class="location">{{ vacancy.company.location }}</p>
+            <p class="description">{{ vacancy.company.description|truncatechars:50 }}</p>
+        </div>
+        <p class="vacancy-description">{{ vacancy.description }}</p>
+
+    </div>
 {% endblock %}

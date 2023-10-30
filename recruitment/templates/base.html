@@ -9,18 +9,25 @@
 <body>
 <div class="container">
     <div class="header">
-        <a href="{% url 'index' %}"><img class="logo" src="https://via.placeholder.com/175x97"/></a>
+        <a class="logo" href="{% url 'jobs:index' %}">find.jobs</a>
         <div class="items">
-            <a href="" class="nav-button">Vacancies</a>
-            <a href="" class="nav-button">Jobs</a>
-            <a href="" class="nav-button">Companies</a>
-            <a href="" class="nav-button">Blog</a>
+            <a href="{% url 'jobs:vacancies_list' 1 %}" class="nav-button">Vacancies</a>
+            <a href="{% url 'jobs:jobs_list' 1 %}" class="nav-button">Jobs</a>
+            <a href="{% url 'jobs:companies_list' 1 %}" class="nav-button">Companies</a>
+            <a href="{% url 'jobs:blog_list' 1 %}" class="nav-button">Blog</a>
         </div>
 
-        <div class="login-reg">
-            <a href="" class="nav-button rectangle">Register</a>
-            <a href="" class="nav-button">Login</a>
-        </div>
+        {% if user.is_anonymous %}
+            <div class="login-reg">
+                <a href="{% url 'account:register' %}" class="nav-button rectangle">Create a resume</a>
+                <a href="{% url 'account:login' %}" class="nav-button">Login</a>
+            </div>
+        {% else %}
+            <div class="login-reg">
+                <a href="{% url 'account:profile_detail' user.username %}" class="nav-button rectangle">Profile</a>
+                <a href="{% url 'account:logout' %}" class="nav-button">Logout</a>
+            </div>
+        {% endif %}
     </div>
 
 

@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+</head>
+<body>
+    <div class="login-container">
+        <form class="login" method="post">
+            <a class="go-back" href="{% url 'jobs:index' %}">Go Back</a>
+            {% csrf_token %}
+            <p class="loginp">Registration</p>
+            <p class="info">Email or phone number</p>
+            <input type="email" name="email" class="textbox">
+
+            <p class="info">Password</p>
+            <input type="password" name="password" class="textbox">
+
+            <p class="info">Repeat Password</p>
+            <input type="password" name="password2" class="textbox">
+
+            <input class="login-btn" type="submit" value="Register">
+        </form>
+    </div>
+</body>
+</html>

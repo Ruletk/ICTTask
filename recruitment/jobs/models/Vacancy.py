@@ -7,9 +7,13 @@ class Vacancy(models.Model):
 
     title = models.CharField(max_length=255)
     description = models.TextField()
-    salary = models.FloatField()
+    salary_start = models.FloatField()
+    salary_end = models.FloatField()
     company = models.ForeignKey("Company", on_delete=models.CASCADE)
     published_at = models.DateField()
+    location = models.CharField(max_length=255)
+    date_work = models.IntegerField(default=0)
+    skill_time = models.IntegerField(default=0)
 
     possibilities = models.ManyToManyField(
         "Possibility", related_name="vacancies", blank=True
@@ -24,7 +28,7 @@ class Vacancy(models.Model):
         super(Vacancy, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse("vacancy_detail", kwargs={"vacancy_id": self.id})
+        return reverse("jobs:vacancy_detail", kwargs={"vacancy_id": self.id})
 
     def __str__(self):
         return self.title

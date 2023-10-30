@@ -4,7 +4,11 @@ from jobs.models import Vacancy
 
 
 def get_all_vacancies():
-    return [i for i in Vacancy.objects.all() if i.published_at <= datetime.date.today()]
+    return [
+        i
+        for i in Vacancy.objects.order_by("-id")
+        if i.published_at <= datetime.date.today()
+    ]
 
 
 def get_vacancy_by_id(vacancy_id):

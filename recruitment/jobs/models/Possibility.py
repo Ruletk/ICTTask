@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from jobs.models.miscs import ColorField
 from slugify import slugify
 
@@ -18,6 +19,11 @@ class Possibility(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         super(Possibility, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse(
+            "jobs:possibilities_detail", kwargs={"possibility_slug": self.slug}
+        )
 
     class Meta:
         verbose_name_plural = "Possibilities"

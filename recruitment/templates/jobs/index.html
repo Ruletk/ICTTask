@@ -13,7 +13,23 @@
 
     {% for vacancy in vacancies %}
     <div class="card">
-        <a class="vacancy-title" href="{{ vacancy.get_absolute_url }}">{{ vacancy.title }}</a>
-    </div>
+                <a href="{{ vacancy.get_absolute_url }}" class="title">{{ vacancy.title }}</a>
+                <a class="salary">${{ vacancy.salary_start|floatformat:"0" }} — ${{ vacancy.salary_end|floatformat:"0" }}</a>
+                <div class="description">{{ vacancy.description|truncatechars:50 }}</div>
+                {% if vacancy.possibilities %}
+                    <div class="possibilities">
+                    {% for possibility in vacancy.possibilities.all %}
+                        <a href="{{ possibility.get_absolute_url }}" style="background-color: {{ possibility.background_color }}; color: {{ possibility.text_color }}">{{ possibility.name }}</a>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+                <a class="company">{{ vacancy.company }}</a>
+                <p class="location">{{ vacancy.location }}</p>
+                <div class="buttons">
+                    <a href="" class="respond">Respond</a>
+                    <a href="" class="call">Call</a>
+                </div>
+
+            </div>
     {% endfor %}
 {% endblock %}
