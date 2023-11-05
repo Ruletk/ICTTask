@@ -1,23 +1,31 @@
 {% extends 'base.html' %}
+{% load martortags %}
 
 {% block before_content %}
-    <div class="vacancy-detail">
-        <h1>{{ vacancy.title }}</h1>
-        <p class="vacancy-salary">${{ vacancy.salary|stringformat:"d" }}</p>
+    <div class="container-fluid bg-dark text-white p-5">
+        <h1 class="display-4 fw-light">{{ vacancy.title }}</h1>
+        <p class="fs-2 fw-light">${{ vacancy.salary_start|floatformat:"0" }}
+            — {{ vacancy.salary_end|floatformat:"0" }}</p>
         <p>{{ vacancy.published_at }}</p>
         {% if vacancy.possibilities %}
-            <div class="possibilities">
-            {% for possibility in vacancy.possibilities.all %}
-                <a style="background-color: {{ possibility.background_color }}; color: {{ possibility.text_color }}" href="{{ possibility.get_absolute_url }}">{{ possibility }}</a>
-            {% endfor %}
+            <div class="d-flex flex-row mb-3">
+                {% for possibility in vacancy.possibilities.all %}
+                    <a class="me-2 text-decoration-none text-white rounded px-3 py-1"
+                       style="background-color: {{ possibility.background_color }}; color: {{ possibility.text_color }}"
+                       href="{{ possibility.get_absolute_url }}">{{ possibility }}</a>
+                {% endfor %}
             </div>
         {% endif %}
-        <div class="company">
-            <a href="{{ vacancy.company.get_absolute_url }}">{{ vacancy.company }}</a>
-            <p class="location">{{ vacancy.company.location }}</p>
-            <p class="description">{{ vacancy.company.description|truncatechars:50 }}</p>
+        <div class="border border-2 border-secondary p-3 rounded w-auto">
+            <a href="{{ vacancy.company.get_absolute_url }}"
+               class="fs-2 fw-bold text-decoration-none text-white mb-1 d-block">{{ vacancy.company }}</a>
+            <p class="fs-4 fw-normal mb-1">{{ vacancy.company.location }}</p>
+            <p class="fs-5 fw-light">{{ vacancy.company.description|truncatechars:100 }}</p>
         </div>
-        <p class="vacancy-description">{{ vacancy.description }}</p>
-
+        <p class="fs-5 fw-light mt-3">{{ vacancy.description|safe_markdown }}</p>
     </div>
+{% endblock %}
+
+{% block content %}
+
 {% endblock %}

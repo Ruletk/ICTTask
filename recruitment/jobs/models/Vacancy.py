@@ -1,15 +1,15 @@
 from django.db import models
 from django.urls import reverse
+from martor.models import MartorField
 
 
 class Vacancy(models.Model):
     """Vacancy model"""
 
     title = models.CharField(max_length=255)
-    description = models.TextField()
+    description = MartorField()
     salary_start = models.FloatField()
     salary_end = models.FloatField()
-    company = models.ForeignKey("Company", on_delete=models.CASCADE)
     published_at = models.DateField()
     location = models.CharField(max_length=255)
     date_work = models.IntegerField(default=0)
@@ -19,6 +19,7 @@ class Vacancy(models.Model):
         "Possibility", related_name="vacancies", blank=True
     )
     skills = models.ManyToManyField("Skill", related_name="vacancies", blank=True)
+    company = models.ForeignKey("Company", on_delete=models.CASCADE)
 
     @staticmethod
     def get_all():

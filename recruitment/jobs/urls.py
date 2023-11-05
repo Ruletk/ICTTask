@@ -20,4 +20,5 @@ urlpatterns = [
         "companies/<int:pagination_page>", views.companies_list, name="companies_list"
     ),
     path("blog/<int:pagination_page>", views.blog_list, name="blog_list"),
+    path("employer", views.employer, name="employer"),
 ]

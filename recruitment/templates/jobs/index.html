@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
+
+
+{% block header %}
+{% endblock %}
 
 
 {% block before_content %}
@@ -8,28 +13,18 @@
 
 {% block content %}
     {% if not vacancies %}
-        <div class="card">There's no more vacancies</div>
+        <div class="card bg-dark text-white border-info mb-3" style="max-width: 45%; margin: 20px auto;">
+            <div class="card-body">
+                <h5 class="card-title">There's no vacancies</h5>
+            </div>
+        </div>
     {% endif %}
 
-    {% for vacancy in vacancies %}
-    <div class="card">
-                <a href="{{ vacancy.get_absolute_url }}" class="title">{{ vacancy.title }}</a>
-                <a class="salary">${{ vacancy.salary_start|floatformat:"0" }} — ${{ vacancy.salary_end|floatformat:"0" }}</a>
-                <div class="description">{{ vacancy.description|truncatechars:50 }}</div>
-                {% if vacancy.possibilities %}
-                    <div class="possibilities">
-                    {% for possibility in vacancy.possibilities.all %}
-                        <a href="{{ possibility.get_absolute_url }}" style="background-color: {{ possibility.background_color }}; color: {{ possibility.text_color }}">{{ possibility.name }}</a>
-                    {% endfor %}
-                    </div>
-                {% endif %}
-                <a class="company">{{ vacancy.company }}</a>
-                <p class="location">{{ vacancy.location }}</p>
-                <div class="buttons">
-                    <a href="" class="respond">Respond</a>
-                    <a href="" class="call">Call</a>
-                </div>
+    {% include 'snippets/vacancy_card.html' %}
 
-            </div>
-    {% endfor %}
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/vacancies.js' %}"></script>
 {% endblock %}

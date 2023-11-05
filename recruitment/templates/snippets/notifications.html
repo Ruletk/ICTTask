@@ -1,0 +1,29 @@
+<div id="notificationContainer" class="position-fixed end-0 top-51 d-flex flex-column align-items-center" style="z-index: 9999; width: 300px;">
+    {% for message in messages %}
+        {% if message.tags == 'success' %}
+            <div class="alert alert-success rounded p-3 mb-3 w-100" role="alert" onclick="this.remove();">
+                <button type="button" class="btn-close float-end" aria-label="Close"
+                        onclick="this.parentElement.style.display='none';"></button>
+                {{ message }}
+            </div>
+        {% elif message.tags == 'error' %}
+            <div class="alert alert-danger rounded p-3 mb-3 w-100" role="alert" onclick="this.remove();">
+                <button type="button" class="btn-close float-end" aria-label="Close"
+                        onclick="this.parentElement.style.display='none';"></button>
+                {{ message }}
+            </div>
+        {% elif message.tags == 'info' %}
+            <div class="alert alert-warning rounded p-3 mb-3 w-100" role="alert" onclick="this.remove();">
+                <button type="button" class="btn-close float-end" aria-label="Close"
+                        onclick="this.parentElement.style.display='none';"></button>
+                {{ message }}
+            </div>
+        {% elif message.tags == 'debug' %}
+            <div class="alert alert-secondary rounded p-3 mb-3 w-100" role="alert" onclick="this.remove();">
+                <button type="button" class="btn-close float-end" aria-label="Close"
+                        onclick="this.parentElement.style.display='none';"></button>
+                {{ message }}
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>

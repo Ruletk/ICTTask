@@ -1,5 +1,6 @@
 from account.forms import UserLoginForm
 from account.forms import UserRegisterForm
+from django.contrib import messages
 from django.contrib.auth import login as base_login
 from django.contrib.auth import logout as base_logout
 from django.shortcuts import redirect
@@ -18,6 +19,7 @@ def login(request):
     form = UserLoginForm(request.POST)
     if form.is_valid():
         base_login(request, form.cleaned_data)
+        messages.success(request, "You have successfully logged in.")
         return redirect("jobs:index")
     else:
         return render(request, "account/login.html", {"form": form})
@@ -26,6 +28,7 @@ def login(request):
 @login_required
 def logout(request):
     base_logout(request)
+    messages.success(request, "You have successfully logged out.")
     return redirect("jobs:index")
 
 

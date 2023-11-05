@@ -1,15 +1,21 @@
 from django import forms
 from django.contrib import admin
+from django.db import models
 from jobs.models import Company
 from jobs.models import Possibility
 from jobs.models import Skill
 from jobs.models import Vacancy
 from jobs.models.miscs import ColorField
+from martor.widgets import AdminMartorWidget
 
 
 # Register your models here.
 @admin.register(Vacancy)
 class VacancyAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        models.TextField: {"widget": AdminMartorWidget},
+    }
+
     class Meta:
         model = Vacancy
         fields = ("title", "description", "salary", "company", "published_at")
@@ -32,6 +38,9 @@ class SkillAdmin(admin.ModelAdmin):
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
+    formfield_overrides = {
+        models.TextField: {"widget": AdminMartorWidget},
+    }
 
     class Meta:
         model = Company

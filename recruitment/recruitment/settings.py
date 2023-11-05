@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 from pathlib import Path
 
+# from django.core.management.commands.runserver import Command as rs
+#
+# rs.default_port="5000"
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,7 +29,7 @@ SECRET_KEY = "django-insecure-*)+7-s^*t&metop6@v)*!rif&3*##oohm#(@2w9@=co(r8)c%c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["192.168.3.3", "0.0.0.0", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -38,6 +43,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "account",
     "jobs",
+    "api",
+    "martor",
 ]
 
 MIDDLEWARE = [
@@ -81,7 +88,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     },
-    "test": {
+    "tests": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "test_db.sqlite3",
     },
@@ -126,6 +133,8 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+STATIC_ROOT = BASE_DIR / "staticroot"
+
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
@@ -134,3 +143,73 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "default": {"format": "[{asctime}] {levelname} {name} {message}", "style": "{"}
+    },
+    "handlers": {
+        "api_file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": f"{BASE_DIR.parent}/logs/api.log",
+            "formatter": "default",
+        },
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": f"{BASE_DIR.parent}/logs/logs.log",
+            "formatter": "default",
+        },
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "jobs": {
+            "handlers": ["file", "console"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+        "api": {
+            "handlers": ["api_file", "console"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
+}
+
+# Martor Settings
+MARTOR_THEME = "bootstrap"
+
+MARTOR_ENABLE_CONFIGS = {
+    "emoji": "true",  # to enable/disable emoji icons.
+    "imgur": "true",  # to enable/disable imgur/custom uploader.
+    "mention": "true",  # to enable/disable mention
+    "jquery": "true",  # to include/revoke jquery (require for admin default django)
+    "living": "true",  # to enable/disable live updates in preview
+    "spellcheck": "false",  # to enable/disable spellcheck in form textareas
+    "hljs": "true",  # to enable/disable hljs highlighting in preview
+}
+
+MARTOR_TOOLBAR_BUTTONS = [
+    "bold",
+    "italic",
+    "horizontal",
+    "heading",
+    "pre-code",
+    "blockquote",
+    "unordered-list",
+    "ordered-list",
+    "link",
+    "image-link",
+    "image-upload",
+    "emoji",
+    "direct-mention",
+    "toggle-maximize",
+    "help",
+]

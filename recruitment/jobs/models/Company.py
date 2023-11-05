@@ -1,4 +1,5 @@
 from django.db import models
+from martor.models import MartorField
 from slugify import slugify
 
 
@@ -11,7 +12,7 @@ class Company(models.Model):
     logo = models.CharField(
         max_length=255
     )  # Swap it to ImageField or picture model later
-    description = models.TextField()
+    description = MartorField()
     employee_count = models.IntegerField(default=0)
     owner = models.ForeignKey("account.User", on_delete=models.CASCADE)
 
