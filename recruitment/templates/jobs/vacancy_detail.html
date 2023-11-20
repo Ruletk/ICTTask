@@ -1,17 +1,23 @@
 {% extends 'base.html' %}
 {% load martortags %}
 
-{% block before_content %}
-    <div class="container-fluid bg-dark text-white p-5">
+{% block title %}
+    {{ vacancy.title }}
+{% endblock %}
+
+
+
+{% block content %}
+    <div class="container-fluid bg-dark text-white p-5 w-50 center">
         <h1 class="display-4 fw-light">{{ vacancy.title }}</h1>
-        <p class="fs-2 fw-light">${{ vacancy.salary_start|floatformat:"0" }}
-            — {{ vacancy.salary_end|floatformat:"0" }}</p>
+        <p class="fs-2 fw-light">${{ vacancy.salary_min|floatformat:"0" }}
+            — {{ vacancy.salary_max|floatformat:"0" }}</p>
         <p>{{ vacancy.published_at }}</p>
         {% if vacancy.possibilities %}
             <div class="d-flex flex-row mb-3">
                 {% for possibility in vacancy.possibilities.all %}
                     <a class="me-2 text-decoration-none text-white rounded px-3 py-1"
-                       style="background-color: {{ possibility.background_color }}; color: {{ possibility.text_color }}"
+                       style="background-color: {{ possibility.background_color }} !important; color: {{ possibility.text_color }} !important;"
                        href="{{ possibility.get_absolute_url }}">{{ possibility }}</a>
                 {% endfor %}
             </div>
@@ -24,8 +30,23 @@
         </div>
         <p class="fs-5 fw-light mt-3">{{ vacancy.description|safe_markdown }}</p>
     </div>
-{% endblock %}
-
-{% block content %}
-
+    {% if user.is_employer %}
+        <div class="fixed-bottom text-center bg-dark p-4 d-flex justify-content-between w-50 mx-auto">
+        <div class="fixed-bottom text-center bg-dark p-4 d-flex justify-content-between w-50 mx-auto border rounded-top-5 align-items-center">
+            <a href="" class="btn btn-primary btn-lg py-3 px-5">Respond</a>
+            {% if vacancy.title %}
+                <a href="" class="btn btn-danger btn-lg py-3 px-5">Hide</a>
+            {% else %}
+                <a href="" class="btn btn-danger btn-lg py-3 px-5">Show</a>
+            {% endif %}
+            <a href="" class="btn btn-secondary btn-lg px-5 py-3">Call</a>
+        </div>
+    {% else %}
+        <div class="fixed-bottom text-center bg-dark p-4 d-flex justify-content-between w-50 mx-auto border rounded-top-5 align-items-center">
+            <a href="" class="btn btn-primary btn-lg py-3 px-5">Respond</a>
+            <p class="text-light">This is a sample text</p>
+            <a href="" class="btn btn-secondary btn-lg px-5 py-3">Call</a>
+        </div>
+    {% endif %}
+    <div class="h-25"></div>
 {% endblock %}

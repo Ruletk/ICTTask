@@ -16,6 +16,13 @@ class Skill(models.Model):
             self.slug = slugify(self.name)
         super(Skill, self).save(*args, **kwargs)
 
+    def to_json(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "slug": self.slug,
+        }
+
     class Meta:
         verbose_name_plural = "Skills"
         ordering = ["name"]

@@ -15,6 +15,9 @@ class VacancyAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {"widget": AdminMartorWidget},
     }
+    list_display = ("id", "title", "salary_min", "published_at")
+    sortable_by = ("title", "salary_min", "published_at")
+    ordering = ("-published_at",)
 
     class Meta:
         model = Vacancy

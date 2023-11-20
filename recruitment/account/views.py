@@ -1,3 +1,5 @@
+import logging
+
 from account.forms import UserLoginForm
 from account.forms import UserRegisterForm
 from django.contrib import messages
@@ -9,6 +11,7 @@ from miscs.decorators import anonymous_required
 from miscs.decorators import login_required
 
 # Create your views here.
+logger = logging.getLogger(__name__)
 
 
 @anonymous_required

@@ -1,7 +1,6 @@
 import json
 from functools import wraps
 
-from account.models import Token
 from django.http import JsonResponse
 from django.shortcuts import redirect
 
@@ -36,7 +35,7 @@ def post_only(func):
     return wrapper
 
 
-def check_token(func):
+def user_login_required(func):
     """Checking token from json data
     Automatically serializing json data to request.json_data
     """
@@ -44,10 +43,8 @@ def check_token(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
         json_data = json.loads(request.body)
-        user = Token.find_user(json_data.get("token"))
-        if user is None:
+        if request.user is None:
             return JsonResponse({"status": "error", "message": "token not found"})
-        request.user = user
         request.json_data = json_data
         return func(request, *args, **kwargs)
 

@@ -22,7 +22,3 @@ repos:
     rev: v3.10.0
     hooks:
       - id: reorder-python-imports
-  - repo: https://github.com/thibaudcolas/curlylint
-    rev: v0.13.1
-    hooks:
-      - id: curlylint

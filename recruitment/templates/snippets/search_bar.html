@@ -1,24 +1,23 @@
 {% load static %}
 <div class="d-flex align-items-center justify-content-center bg-dark p-5">
-    <form class="d-flex align-items-center rounded-pill p-3 w-75" style="background-color: #27292B;" method="post">
-        {% csrf_token %}
+    <form class="d-flex align-items-center rounded-pill p-3 w-75" style="background-color: #27292B;" method="get" action="/search/" onsubmit="submitForm(); return false;">
         <div class="d-flex align-items-center">
             <img src="{% static 'icons/search.png' %}" class="me-2" alt="Image" style="width: 40px; height: 40px"/>
-            <input {% if search_query %} value="{{ search_query.keyword }}" {% endif %} type="text" name="keyword" class="form-control border-0 text-light light-gray-placeholder" placeholder="Job or key words"
+            <input id="search_query" {% if search_query %} value="{{ search_query.keyword }}" {% endif %} type="text" name="query" class="form-control border-0 text-light light-gray-placeholder" placeholder="Job or key words"
                    style="width: 300px; background-color: #27292B;">
         </div>
 
         <div class="d-flex align-items-center ms-3">
             <div class="bg-secondary me-2" style="height: 60px; width: 2px;"></div>
             <img src="{% static 'icons/pin.png' %}" class="me-2" alt="Image" style="width: 40px; height: 40px"/>
-            <input {% if search_query %} value="{{ search_query.location }}" {% endif %} type="text" name="location" class="form-control border-0 text-light light-gray-placeholder" placeholder="Location"
+            <input id="search_location" {% if search_query %} value="{{ search_query.location }}" {% endif %} type="text" name="location" class="form-control border-0 text-light light-gray-placeholder" placeholder="Location"
                    style="width: 300px; background-color: #27292B;">
         </div>
 
         <div class="d-flex align-items-center ms-3">
             <div class="bg-secondary me-2" style="height: 60px; width: 2px;"></div>
             <img src="{% static 'icons/dollar.png' %}" class="me-2" alt="Image" style="width: 40px; height: 40px"/>
-            <input {% if search_query and search_query.salary %} value="{{ search_query.salary }}" {% endif %} type="text" name="salary" class="form-control border-0 text-light light-gray-placeholder" placeholder="Desired Earnings"
+            <input id="search_salary" {% if search_query and search_query.salary %} value="{{ search_query.salary }}" {% endif %} type="text" name="salary" class="form-control border-0 text-light light-gray-placeholder" placeholder="Desired Earnings"
                    style="width: 300px; background-color: #27292B;">
         </div>
 

@@ -7,9 +7,8 @@ from api.services.vacancies import switch_vacancy_user_favorites
 from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from miscs.decorators import check_token
 from miscs.decorators import post_only
-
+from miscs.decorators import user_login_required
 
 # Create your views here.
 
@@ -18,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 @csrf_exempt
 @post_only
-@check_token
+@user_login_required
 def switch_favorite_vacancy(request):
     """Body:
     "vacancy_id": id of vacancy
@@ -26,7 +25,7 @@ def switch_favorite_vacancy(request):
 
     vacancy_id = request.json_data.get("vacancy_id", None)
     if not vacancy_id:
-        logger.info("invalid request for %s, %s", request.user, vacancy_id)
+        logger.debug("invalid request for %s, %s", request.user, vacancy_id)
         return JsonResponse({"status": "error", "message": "invalid request"})
 
     res = switch_vacancy_user_favorites(vacancy_id, request.user)
@@ -40,12 +39,13 @@ def switch_favorite_vacancy(request):
 
 @csrf_exempt
 @post_only
-@check_token
+@user_login_required
 def check_favorite_vacancy(request):
     """Body:
     "vacancy_id": id of vacancy
     """
     vacancy_id = request.json_data.get("vacancy_id", None)
+    logger.debug(f"{request.COOKIES.get('sessionid', None)}, {request.user}")
 
     if vacancy_id is None:
         logger.info("invalid request for %s, %s", request.user, vacancy_id)
@@ -56,12 +56,13 @@ def check_favorite_vacancy(request):
         return JsonResponse(
             {"status": "error", "message": "invalid vacancy id or user id"}
         )
+    return JsonResponse({"status": "error", "message": "invalid vacancy id or user id"})
     return JsonResponse({"status": "ok", "message": "success", "on": res})
 
 
 @csrf_exempt
 @post_only
-@check_token
+@user_login_required
 def check_user_profile(request):
     res = get_user_type(request.user)
     return JsonResponse({"status": "ok", "message": "success", "type": res})
@@ -69,7 +70,7 @@ def check_user_profile(request):
 
 @csrf_exempt
 @post_only
-@check_token
+@user_login_required
 def switch_user_profile(request):
     typ = request.json_data.get("type", None)
     if typ is None:

@@ -14,7 +14,9 @@ class Company(models.Model):
     )  # Swap it to ImageField or picture model later
     description = MartorField()
     employee_count = models.IntegerField(default=0)
-    owner = models.ForeignKey("account.User", on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        "account.User", on_delete=models.CASCADE, related_name="company"
+    )
 
     def __str__(self):
         return self.name
@@ -23,6 +25,18 @@ class Company(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         super(Company, self).save(*args, **kwargs)
+
+    def to_json(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "slug": self.slug,
+            "location": self.location,
+            "logo": self.logo,
+            "description": self.description,
+            "employee_count": self.employee_count,
+            "owner": self.owner.username,
+        }
 
     class Meta:
         verbose_name_plural = "Companies"

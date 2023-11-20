@@ -12,7 +12,7 @@ def switch_vacancy_user_favorites(vacancy_id: int, user: User):
     logger.debug("Switching vacancy user favorites: %s, %s", vacancy_id, user.username)
     vacancy = get_or_none(Vacancy, id=vacancy_id)
 
-    if vacancy is None or user is None:
+    if vacancy is None or user is None or user.is_anonymous:
         return None
 
     on = False

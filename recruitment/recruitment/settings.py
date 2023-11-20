@@ -9,7 +9,12 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import os
 from pathlib import Path
+
+from dotenv import load_dotenv
+
+load_dotenv(os.getenv("ENVIRONMENT_FILE", ".env"))
 
 # from django.core.management.commands.runserver import Command as rs
 #
@@ -41,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.humanize",
     "account",
     "jobs",
     "api",
@@ -85,8 +91,12 @@ WSGI_APPLICATION = "recruitment.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": os.environ.get("DB_HOST"),
+        "PORT": os.environ.get("DB_PORT"),
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASSWORD"),
     },
     "tests": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -152,16 +162,28 @@ LOGGING = {
         "default": {"format": "[{asctime}] {levelname} {name} {message}", "style": "{"}
     },
     "handlers": {
-        "api_file": {
+        "errors": {
+            "level": "ERROR",
+            "class": "logging.FileHandler",
+            "filename": f"{BASE_DIR.parent}/logs/errors.log",
+            "formatter": "default",
+        },
+        "api_handler": {
             "level": "DEBUG",
             "class": "logging.FileHandler",
             "filename": f"{BASE_DIR.parent}/logs/api.log",
             "formatter": "default",
         },
-        "file": {
+        "jobs_handler": {
             "level": "DEBUG",
             "class": "logging.FileHandler",
-            "filename": f"{BASE_DIR.parent}/logs/logs.log",
+            "filename": f"{BASE_DIR.parent}/logs/jobs.log",
+            "formatter": "default",
+        },
+        "account_handler": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": f"{BASE_DIR.parent}/logs/account.log",
             "formatter": "default",
         },
         "console": {
@@ -171,12 +193,17 @@ LOGGING = {
     },
     "loggers": {
         "jobs": {
-            "handlers": ["file", "console"],
+            "handlers": ["jobs_handler", "console", "errors"],
             "level": "DEBUG",
             "propagate": True,
         },
         "api": {
-            "handlers": ["api_file", "console"],
+            "handlers": ["api_handler", "console", "errors"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+        "account": {
+            "handlers": ["account_handler", "console", "errors"],
             "level": "DEBUG",
             "propagate": True,
         },

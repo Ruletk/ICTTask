@@ -1,3 +1,4 @@
+import logging
 from uuid import uuid4
 
 from django.contrib.auth.models import AbstractUser
@@ -7,6 +8,8 @@ from jobs.models import Vacancy
 
 
 # Create your models here.
+
+logger = logging.getLogger(__name__)
 
 
 class User(AbstractUser):
@@ -29,7 +32,10 @@ class User(AbstractUser):
         self.favorite_jobs.remove(vacancy)
 
     def is_favorite_job(self, vacancy_id: int):
-        return any([i.id == vacancy_id for i in self.favorite_jobs.all()])
+        for i in self.favorite_jobs.all():
+            if i.id == vacancy_id:
+                return True
+        return False
 
     def generate_token(self):
         if self.token is None:
@@ -67,3 +73,5 @@ class Token(models.Model):
             return Token.objects.get(token=token).user_token
         except Token.DoesNotExist:
             return None
+        except Exception as ex:
+            logger.warning(ex)

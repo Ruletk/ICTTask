@@ -25,6 +25,15 @@ class Possibility(models.Model):
             "jobs:possibilities_detail", kwargs={"possibility_slug": self.slug}
         )
 
+    def to_json(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "slug": self.slug,
+            "background_color": self.background_color,
+            "text_color": self.text_color,
+        }
+
     class Meta:
         verbose_name_plural = "Possibilities"
         ordering = ["name"]

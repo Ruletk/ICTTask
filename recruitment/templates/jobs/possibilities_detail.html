@@ -7,5 +7,7 @@
 
 
 {% block content %}
-    <p class="in-developing">Sorry, page under construction</p>
+    {% for vacancy in vacancies %}
+    {% include 'snippets/vacancy_card.html' %}
+    {% endfor %}
 {% endblock %}

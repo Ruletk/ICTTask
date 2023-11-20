@@ -1,74 +1,140 @@
-const container = document.getElementsByClassName('card');
-
-var headers = new Headers();
-headers.append('Content-Type', 'application/json');
-
-for (var i = 0; i < container.length; i++) {
-    (function (i) {
-        var vacancy_id = container[i].querySelector(".card-header a").getAttribute("href").split("/")[2];
-
-        var request = new Request("api/check_user_vacancy_favorite", {
-            method: "POST",
-            headers: headers,
-            body: JSON.stringify({"token": userToken, "vacancy_id": vacancy_id})
-        });
-        fetch(request)
-            .then(function (response) {
-                if (response.status === 200) {
-                    return response.json();
-                } else {
-                    throw new Error('Request failed');
-                }
-            })
-            .then(function (data) {
-                var img = container[i].querySelector(".card-header .btn img");
-                if (data.on) {
-                    img.setAttribute("src", "/static/icons/star_filled.png")
-                } else {
-                    img.setAttribute("src", "/static/icons/star.png");
-                }
-            })
-            .catch(function (error) {
-                createNotification("alert", "Error while checking favorite vacancies.");
-                console.log(error);
-            });
-    })(i);
-}
+let page = 2;
+let stop = false;
 
 
-for (var i = 0; i < container.length; i++) {
-    (function (i) {
-        container[i].addEventListener('click', function (event) {
-            if (event.target.classList.contains('btn') && event.target.parentElement.classList.contains('card-header')) {
-                var vacancy_id = container[i].querySelector(".card-header a").getAttribute("href").split("/")[2];
+function handleToggleFavoriteVacancy(event) {
+    var card = $(event.currentTarget).closest('.card');
+    if (!card.length || !$(event.target).hasClass('btn') || !$(event.target).parent().hasClass('card-header')) {
+        return;
+    }
 
-                var request = new Request("api/switch_user_vacancy_favorite", {
-                    method: "POST",
-                    headers: headers,
-                    body: JSON.stringify({"token": userToken, "vacancy_id": vacancy_id})
-                });
-                fetch(request)
-                    .then(function (response) {
-                        if (response.status === 200) {
-                            return response.json();
-                        } else {
-                            throw new Error('Request failed');
-                        }
-                    })
-                    .then(function (data) {
-                        var img = container[i].querySelector(".card-header .btn img");
-                        if (data.on) {
-                            img.setAttribute("src", "/static/icons/star_filled.png");
-                            createNotification("info", "Vacancy added to favorites.")
-                        } else {
-                            img.setAttribute("src", "/static/icons/star.png");
-                            createNotification("info", "Vacancy removed from favorites.")
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
+    var vacancy_id = card.attr("id");
+    var img = card.find(".card-header .btn img");
+
+    if (!vacancy_id || !img.length) {
+        return;
+    }
+
+    $.ajax({
+        url: "/api/switch_user_vacancy_favorite",
+        type: "POST",
+        headers: headers,
+        data: JSON.stringify({"vacancy_id": vacancy_id}),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            if (data.status === "error") {
+                createNotification("error", "Error while adding vacancy to favorites.");
+                return;
             }
-        });
-    })(i);
+            var imgSrc = data.on ? "/static/icons/star_filled.png" : "/static/icons/star.png";
+            img.attr("src", imgSrc);
+            var notificationText = data.on ? "Vacancy added to favorites." : "Vacancy removed from favorites.";
+            createNotification("info", notificationText);
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
 }
+
+
+let searchTimeout;
+
+function initSearch() {
+    let urlParams = new URLSearchParams(window.location.search);
+    let query = urlParams.get('query');
+    let location = urlParams.get('location');
+    let salary = urlParams.get('salary');
+
+    let searchQuery = $("#search_query");
+    let searchLocation = $("#search_location");
+    let searchSalary = $("#search_salary");
+
+    if (query) searchQuery.val(decodeURIComponent(query));
+    if (location) searchLocation.val(decodeURIComponent(location));
+    if (salary) searchSalary.val(decodeURIComponent(salary));
+
+    function handleInput() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(submitForm, 300);
+    }
+
+    searchQuery.on("input", handleInput);
+    searchLocation.on("input", handleInput);
+    searchSalary.on("input", handleInput);
+}
+
+function submitForm() {
+    let query = $("#search_query").val();
+    let location = $("#search_location").val();
+    let salary = $("#search_salary").val();
+
+    if (salary !== "") {
+        if (isNaN(salary) || salary < 0) {
+            createNotification("error", "Salary must be a positive number.");
+            return;
+        }
+    } else if (salary !== "") {
+        createNotification("error", "Salary must be a number.");
+        return;
+    }
+
+    let params = new URLSearchParams();
+    if (query) params.append("query", encodeURIComponent(query));
+    if (location) params.append("location", encodeURIComponent(location));
+    if (salary) params.append("salary", encodeURIComponent(salary));
+    params.append("page", 1);
+
+    let url = baseURL + "/search?" + params.toString();
+    if (url[url.length - 1] === '?') url = url.slice(0, -1)
+
+    window.history.replaceState({}, '', url);
+    $.get(url)
+        .done(function (data) {
+            $('#vacancies').html(data);
+            stop = false;
+            page = 2;
+        })
+        .fail(function (error) {
+            createNotification("error", "Error while searching vacancies.");
+            console.log(error);
+            stop = true;
+        });
+}
+
+function loadMoreData() {
+    if (stop) return;
+
+    let params = new URLSearchParams({ page: page });
+    ["query", "location", "salary"].forEach(key => {
+        let value = $(`#search_${key}`).val();
+        if (value) params.append(key, value);
+    });
+
+    $.ajax({
+        url: "/search?" + params.toString(),
+        type: "get",
+        beforeSend: function () {
+            $('.ajax-load').show();
+            page++;
+        }
+    })
+        .done(function (data) {
+            $('.ajax-load').hide();
+            if (data === "") {
+                $('.ajax-load').html("No more records found");
+                stop = true
+            } else
+                $("#vacancies").append(data);
+        })
+        .fail(function (jqXHR, ajaxOptions, thrownError) {
+            alert('server not responding...');
+        });
+}
+
+$(window).scroll(function () {
+    if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
+        loadMoreData();
+    }
+});

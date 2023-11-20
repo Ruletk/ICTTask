@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="w-100 h-100 d-flex justify-content-center align-items-center">
+        <div class="w-50 center text-light">
+            <h1 class="text-light text-center">Create Vacancy</h1>
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-group text-light m-2">
+                    <label for="vacancyTitleInput" class="text-light">Vacancy title</label>
+                    <input type="text" class="form-control bg-dark text-light" id="vacancyTitleInput" name="title"
+                           maxlength="255" required="" placeholder="Enter title">
+                </div>
+                <div class="form-group text-light m-2">
+                    {#                    {{ form.description }}#}
+                    <textarea rows="10" class="form-control bg-dark text-light" id="vacancyDescriptionInput"
+                              name="description"
+                              maxlength="255" required="" placeholder="Enter description"></textarea>
+                </div>
+                <div class="form-group text-light m-2 d-flex justify-content-between">
+                    <div class="left w-25">
+                        <label for="vacancySalaryMinInput" class="text-light">Salary min</label>
+                        <input type="text" class="form-control bg-dark text-light" id="vacancySalaryMinInput"
+                               name="salary_min"
+                               maxlength="255" required="" placeholder="Enter title">
+                    </div>
+                    <div class="right w-25">
+                        <label for="vacancySalaryMaxInput" class="text-light">Salary max</label>
+                        <input type="text" class="form-control bg-dark text-light" id="vacancySalaryMaxInput"
+                               name="salary_max"
+                               maxlength="255" required="" placeholder="Enter title">
+                    </div>
+                </div>
+
+                <div class="form-group text-light m-2">
+                    <label for="vacancyLocationInput" class="text-light">Location</label>
+                    <input type="text" class="form-control bg-dark text-light" id="vacancyLocationInput" name="location"
+                           maxlength="255" required="" placeholder="Enter location">
+                </div>
+                <div class="form-group text-light m-2 d-flex align-items-center justify-content-center">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="working_days" value="0"
+                               id="id_working_days_0">
+                        <label class="form-check-label" for="id_working_days_0">Monday</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="working_days" value="1"
+                               id="id_working_days_1">
+                        <label class="form-check-label" for="id_working_days_1">Tuesday</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="working_days" value="2"
+                               id="id_working_days_2">
+                        <label class="form-check-label" for="id_working_days_2">Wednesday</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="working_days" value="3"
+                               id="id_working_days_3">
+                        <label class="form-check-label" for="id_working_days_3">Thursday</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="working_days" value="4"
+                               id="id_working_days_4">
+                        <label class="form-check-label" for="id_working_days_4">Friday</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="working_days" value="5"
+                               id="id_working_days_5">
+                        <label class="form-check-label" for="id_working_days_5">Saturday</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="working_days" value="6"
+                               id="id_working_days_6">
+                        <label class="form-check-label" for="id_working_days_6">Sunday</label>
+                    </div>
+                </div>
+
+                <div class="form-group text-light m-2 w-25">
+                    <label for="id_experience_time" class="text-light">Experience time</label>
+                    <input aria-describedby="experienceHelp" type="number" class="form-control bg-dark text-light" name="experience_time" required="" id="id_experience_time" placeholder="Enter experience time">
+                    <small id="experienceHelp" class="form-text text-white-50">Type time in years</small>
+                </div>
+
+                <div class="p-2">{{ form.possibilities }}</div>
+                <div class="p-2">{{ form.skills }}</div>
+                <div class="d-flex w-100 justify-content-center align-items-center">
+                    <button type="submit" class="btn btn-primary p-3 w-25">Create vacancy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
