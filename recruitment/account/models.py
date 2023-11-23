@@ -12,15 +12,29 @@ from jobs.models import Vacancy
 logger = logging.getLogger(__name__)
 
 
+def user_avatar_path(instance, filename):
+    return f"avatars/{instance.id}/avatar.{filename.split('.')[-1]}"
+
+
 class User(AbstractUser):
     """Custom user model"""
 
+    patronymic = models.CharField(max_length=255, blank=True)
+
+    avatar = models.ImageField(upload_to=user_avatar_path, blank=True)
     phone_number = models.CharField(max_length=255)
+    address = models.CharField(max_length=255, blank=True)
     favorite_jobs = models.ManyToManyField("jobs.Vacancy", blank=True)
     token = models.OneToOneField(
         "Token", on_delete=models.CASCADE, related_name="user_token", null=True
     )
     is_employer = models.BooleanField(default=False)
+
+    user_site = models.CharField(max_length=255, blank=True)
+    user_github = models.CharField(max_length=255, blank=True)
+    user_twitter = models.CharField(max_length=255, blank=True)
+    user_instagram = models.CharField(max_length=255, blank=True)
+    user_facebook = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
         return self.username
@@ -75,3 +89,27 @@ class Token(models.Model):
             return None
         except Exception as ex:
             logger.warning(ex)
+
+
+class Education(models.Model):
+    """Education model"""
+
+    DEGREES = (
+        ("bachelor", "Bachelor"),
+        ("master", "Master"),
+        ("doctor", "Doctor"),
+    )
+
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="education"
+    )
+    institution = models.CharField(max_length=255)
+    faculty = models.CharField(max_length=255)
+    speciality = models.CharField(max_length=255)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    degree = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.institution} - {self.faculty}"

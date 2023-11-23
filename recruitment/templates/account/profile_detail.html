@@ -1,12 +1,162 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load user_tags %}
 
 {% block title %}
-	{{ user.username }}
+    {{ user.username }}
 {% endblock %}
 
 {% block content %}
-    <div class="col-md-12 mt-5 w-100 text-center p-5">
-        <h1 class="display-4 text-light">Page under construction</h1>
-        <p class="lead text-light">You can visit <a class="text-decoration-none" href="/">main page</a></p>
-    </div>
+    <section class="bg-dark text-white">
+        <div class="container py-5">
+
+        {% if user.is_authenticated and request.user == user %}
+           {% include 'snippets/user_navbar.html' %}
+        {% endif %}
+
+            <div class="row" id="profileWrapper">
+                <div class="col-lg-4">
+                    <div class="card mb-4 bg-dark text-light border-1 border-light">
+                        <div class="card-body text-center">
+                            <img src="{{ user.avatar.url }}"
+                                alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
+                            <h5 class="my-3">{{ user.first_name }} {{ user.last_name }} {{ user.patronymic }}</h5>
+                            <p class="text-light-muted mb-1">Full Stack Developer</p>
+                            <p class="text-light-muted mb-4">Bay Area, San Francisco, CA</p>
+{#                            <div class="d-flex justify-content-center mb-2">#}
+{#                                <button type="button" class="btn btn-primary">Follow</button>#}
+{#                                <button type="button" class="btn btn-outline-primary ms-1">Message</button>#}
+{#                            </div>#}
+                        </div>
+                    </div>
+                    <div class="card mb-4 mb-lg-0 bg-dark-2 text-light border-1 border-light">
+                        <div class="card-body p-0">
+                            <ul class="list-group list-group-flush rounded-3">
+                                {% if user.user_site %}
+                                <li
+                                    class="bg-dark text-light border-secondary list-group-item d-flex justify-content-between align-items-center p-3 ">
+                                    <i class="fas fa-globe fa-lg text-warning"></i>
+                                    <a href="{{ user.user_site }}" class="mb-0 text-decoration-none text-light">{{ user.user_site }}</a>
+                                </li>
+                                {% endif %}
+                            {% if user.user_github %}
+                                <li
+                                    class="bg-dark text-light border-secondary list-group-item d-flex justify-content-between align-items-center p-3">
+                                    <i class="fab fa-github fa-lg"></i>
+                                    <a href="https://github.com/{{ user.user_github }}" class="mb-0 text-decoration-none text-light">{{ user.user_github }}</a>
+                                </li>
+                            {% endif %}
+                            {% if user.user_twitter %}
+                                <li
+                                    class="bg-dark text-light border-secondary list-group-item d-flex justify-content-between align-items-center p-3">
+                                    <i class="fab fa-twitter fa-lg"></i>
+                                    <a href="" class="mb-0 text-decoration-none text-light">@{{ user.user_twitter }}</a>
+                                </li>
+                            {% endif %}
+                            {% if user.user_instagram %}
+                                <li
+                                    class="bg-dark text-light border-secondary list-group-item d-flex justify-content-between align-items-center p-3">
+                                    <i class="fab fa-instagram fa-lg"></i>
+                                    <a href="" class="mb-0 text-decoration-none text-light">{{ user.user_instagram }}</a>
+                                </li>
+                            {% endif %}
+                            {% if user.user_facebook %}
+                                <li
+                                    class="bg-dark text-light border-secondary list-group-item d-flex justify-content-between align-items-center p-3">
+                                    <i class="fab fa-facebook-f fa-lg"></i>
+                                    <a href="" class="mb-0 text-decoration-none text-light">{{ user.user_facebook }}</a>
+                                </li>
+                            </ul>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card mb-4 border-1 border-light bg-dark text-light">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Full Name</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-white-muted mb-0">{{ user.first_name }} {{ user.last_name }} {{ user.patronymic }}</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Email</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-white-muted mb-0">{{ user.email }}</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Mobile</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-white-muted mb-0">
+                                        {% if user.phone_number %}{% user_phone user %}{% else %}Prefer not to say{% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                            <hr>
+{#                            <div class="row">#}
+{#                                <div class="col-sm-3">#}
+{#                                    <p class="mb-0">Mobile</p>#}
+{#                                </div>#}
+{#                                <div class="col-sm-9">#}
+{#                                    <p class="text-white-muted mb-0">(098) 765-4321</p>#}
+{#                                </div>#}
+{#                            </div>#}
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Country</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-white-muted mb-0">{{ user.address }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% if user.resume %}
+                    <div class="row">
+                        <div class="col">
+                            <div class="card mb-4 mb-md-0 bg-dark text-light border-1 border-light">
+                                <div class="card-body">
+                                    <h5 class="mb-4">John Doe</h5>
+                                    <h6 class="mb-1" style="font-size: .77rem;">Frontend Developer</h6>
+                                    <p class="mb-1" style="font-size: .77rem;">Experience with JavaScript, CSS, HTML...</p>
+                                    <h6 class="mt-4 mb-1">Skills:</h6>
+                                    <ul style="font-size: .77rem;">
+                                        <li>JavaScript, CSS, HTML</li>
+                                        <li>React.js</li>
+                                        <!-- Add more skills as needed -->
+                                    </ul>
+                                    <h6 class="mt-4 mb-1">Experience:</h6>
+                                    <ul style="font-size: .77rem;">
+                                        <li>2 years at Company A</li>
+                                        <li>1 year at Company B</li>
+                                        <!-- Add more experience as needed -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+    {#    <div class="col-md-12 mt-5 w-100 text-center p-5">#}
+    {#        <h1 class="display-4 text-light">Page under construction</h1>#}
+    {#        <p class="lead text-light">You can visit <a class="text-decoration-none" href="/">main page</a></p>#}
+    {#    </div>#}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/profile.js' %}"></script>
 {% endblock %}

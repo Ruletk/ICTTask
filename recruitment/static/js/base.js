@@ -112,6 +112,4 @@ $(document).ready(function() {
     if (notificationQueue.length > 0) {
         setTimeout(removeNextNotification, 2000);
     }
-
-    initSearch();
 });

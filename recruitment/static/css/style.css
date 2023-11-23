@@ -1,3 +1,15 @@
 .light-gray-placeholder::placeholder {
     color: #B6B6B6;
 }
+
+.text-light-muted {
+    color: #6c757d !important;
+}
+
+.text-white-muted {
+    color: #f8f9fa !important;
+}
+
+.bg-dark-2 {
+    background-color: #343a40 !important;
+}

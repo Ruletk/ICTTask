@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 
 /recruitment/staticroot/
+/recruitment/media/

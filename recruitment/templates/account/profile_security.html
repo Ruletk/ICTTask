@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load user_tags %}
+
+{% block title %}
+    {{ user.username }}
+{% endblock %}
+
+{% block content %}
+    <section class="bg-dark text-white">
+        <div class="container py-5">
+
+            {% if user.is_authenticated and request.user == user %}
+                {% include 'snippets/user_navbar.html' %}
+            {% endif %}
+
+            <div class="row" id="profileWrapper">
+                <div class="d-flex justify-content-center flex-column align-items-center">
+                    <div class="col-lg-8">
+                        <div class="card mb-4 bg-dark text-light border-1 border-light">
+                            <div class="card-body text-center">
+                                <h4 class="my-3">Security</h4>
+                            </div>
+                        </div>
+                        <div class="card mb-4 border-1 border-light bg-dark text-light">
+                            <div class="card-body">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="form-row">
+                                        <div class="col-sm">
+                                            <label for="id_password1" class="form-label">Password</label>
+                                            {% if password_form.password1.errors %}
+                                                <input name="password1" id="id_password1" type="password"
+                                                       class="form-control bg-dark-2 text-light border-secondary is-invalid">
+                                                <div class="invalid-feedback">
+                                                {% for error in password_form.password1.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            {% else %}
+                                                <input name="password1" id="id_password1" type="password"
+                                                       class="form-control bg-dark-2 text-light border-secondary">
+                                            {% endif %}
+
+                                            </div>
+                                            <div class="col-sm">
+                                                <label for="id_password2" class="form-label">Repeat Password</label>
+                                                {% if password_form.password2.errors %}
+                                                    <input name="password2" id="id_password2" type="password"
+                                                           class="form-control bg-dark-2 text-light border-secondary is-invalid">
+                                                    <div class="invalid-feedback">
+                                                    {% for error in password_form.password2.errors %}
+                                                        {{ error }}
+                                                    {% endfor %}
+                                                {% else %}
+                                                    <input name="password2" id="id_password2" type="password"
+                                                           class="form-control bg-dark-2 text-light border-secondary">
+                                                {% endif %}
+
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <button type="submit" class="btn btn-primary mt-2 mx-auto w-25">Update
+                                                    Password
+                                                </button>
+
+                                            </div>
+                                </form>
+                            <form method="post">
+                                {% csrf_token %}
+                                <hr>
+{#                                <div class="row">#}
+{#                                    <div class="col-sm">#}
+{#                                        <label for="id_speciality" class="form-label">Speciality</label>#}
+{#                                        <input name="speciality" id="id_speciality" type="text"#}
+{#                                               class="form-control bg-dark-2 text-light"#}
+{#                                               value="{{ user.education.speciality }}">#}
+{#                                    </div>#}
+{#                                    <div class="col-sm">#}
+{#                                        <label for="id_degree" class="form-label">Degree</label>#}
+{#                                        <select name="degree" id="id_degree"#}
+{#                                                class="form-control bg-dark-2 text-light">#}
+{#                                            {% for val, name in degrees %}#}
+{#                                                <option value="{{ val }}" {% if val == user.education.degree %}#}
+{#                                                        selected {% endif %}>{{ name }}</option>#}
+{#                                            {% endfor %}#}
+{#                                        </select>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                                <hr>#}
+{#                                <div class="row">#}
+{#                                    <div class="col-sm">#}
+{#                                        <label for="id_start_datepicker" class="form-label">Start date</label>#}
+{#                                        <div class="input-group date" id="datepicker">#}
+{#                                            <input name="start_date" type="date" id="id_start_datepicker"#}
+{#                                                   class="form-control bg-dark-2 text-light">#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                    <div class="col-sm">#}
+{#                                        <label for="id_end_datepicker" class="form-label">End date</label>#}
+{#                                        <div class="input-group date" id="datepicker">#}
+{#                                            <input name="end_date" type="date" id="id_end_datepicker"#}
+{#                                                   class="form-control bg-dark-2 text-light">#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                                <hr>#}
+{#                                <div class="row">#}
+{#                                    <div class="col-sm">#}
+{#                                        <label for="id_description" class="form-label">Description</label>#}
+{#                                        <textarea name="description" id="id_description" cols="30" rows="10"#}
+{#                                                  class="form-control bg-dark-2 text-light">{{ user.education.description }}</textarea>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                                <hr>#}
+{#                                <button type="submit" class="btn btn-primary">Save Changes</button>#}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/profile.js' %}"></script>
+{% endblock %}

@@ -63,4 +63,4 @@ class Vacancy(models.Model):
 
     class Meta:
         verbose_name_plural = "Vacancies"
-        ordering = ["title"]
+        ordering = ["-published_at"]

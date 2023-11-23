@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load user_tags %}
+
+
+{% block title %}
+    {{ user.username }}
+{% endblock %}
+
+{% block content %}
+    <section class="bg-dark text-white">
+        <div class="container py-5">
+
+            {% if user.is_authenticated and request.user == user %}
+                {% include 'snippets/user_navbar.html' %}
+            {% endif %}
+
+            <div class="row" id="profileWrapper">
+                <div class="d-flex justify-content-center flex-column align-items-center">
+                    <div class="col-lg-8">
+                        <div class="card mb-4 bg-dark text-light border-1 border-light">
+                            <div class="card-body text-center">
+                                <h4 class="my-3">Settings</h4>
+                            </div>
+                        </div>
+                        <div class="card mb-4 border-1 border-light bg-dark text-light">
+                            <div class="card-body">
+                                <form method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <label for="id_first_name" class="form-label">First Name</label>
+                                            <input name="first_name" id="id_first_name" type="text"
+                                                   class="form-control bg-dark-2 text-light border-secondary"
+                                                   value="{{ user.first_name }}">
+                                        </div>
+                                        <div class="col-sm">
+                                            <label for="id_last_name" class="form-label">Last Name</label>
+                                            <input name="last_name" id="id_last_name" type="text"
+                                                   class="form-control bg-dark-2 text-light border-secondary"
+                                                   value="{{ user.last_name }}">
+                                        </div>
+                                        <div class="col-sm">
+                                            <label for="id_patronymic" class="form-label">Patronymic</label>
+                                            <input name="patronymic" id="id_patronymic" type="text"
+                                                   class="form-control bg-dark-2 text-light"
+                                                   value="{{ user.patronymic }}">
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <label for="id_phone_number" class="form-label">Phone</label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-dark-2 text-light fw-bold text-center">+</span>
+                                                <input name="phone_number" type="tel" id="id_phone_number"
+                                                       class="form-control bg-dark-2 text-light"
+                                                       value="{{ user.phone_number }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <label for="id_address" class="form-label">Country</label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <input name="address" type="text" id="id_address"
+                                                   class="form-control bg-dark-2 text-light"
+                                                   value="{{ user.address }}">
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <label for="id_avatar" class="form-label">Avatar</label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <input name="avatar" type="file" id="id_avatar"
+                                                   class="form-control-file bg-dark-2 text-light"
+                                                   value="{{ user.avatar }}">
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row mb-2">
+                                        <div class="col-sm-3">
+                                            <label for="id_user_site" class="form-label">Site</label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-dark-2 text-light fw-bold text-center" style="width: 45px;"><i
+                                                        class="fas fa-globe fa-lg text-warning"></i></span>
+
+                                                <input name="user_site" type="text" id="id_user_site"
+                                                       class="form-control bg-dark-2 text-light"
+                                                       value="{{ user.user_site }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-sm-3">
+                                            <label for="id_user_github" class="form-label">Github</label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-dark-2 text-light fw-bold text-center" style="width: 45px;"><i
+                                                        class="fab fa-github fa-lg"></i></span>
+                                                <input name="user_github" type="text" id="id_user_github"
+                                                       class="form-control bg-dark-2 text-light"
+                                                       value="{{ user.user_github }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-sm-3">
+                                            <label for="id_user_twitter" class="form-label">Twitter</label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-dark-2 text-light fw-bold text-center" style="width: 45px;"><i
+                                                        class="fab fa-twitter fa-lg"></i></span>
+                                                <input name="user_twitter" type="text" id="id_user_twitter"
+                                                       class="form-control bg-dark-2 text-light"
+                                                       value="{{ user.user_twitter }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-sm-3">
+                                            <label for="id_user_instagram" class="form-label">Instagram</label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-dark-2 text-light fw-bold text-center" style="width: 45px;"><i
+                                                        class="fab fa-instagram fa-lg"></i></span>
+                                                <input name="user_instagram" type="text" id="id_user_instagram"
+                                                       class="form-control bg-dark-2 text-light"
+                                                       value="{{ user.user_instagram }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-sm-3">
+                                            <label for="id_user_facebook" class="form-label">Facebook</label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-dark-2 text-light fw-bold text-center" style="width: 45px;"><i
+                                                        class="fab fa-facebook-f fa-lg"></i></span>
+                                                <input name="user_facebook" type="text" id="id_user_facebook"
+                                                       class="form-control bg-dark-2 text-light"
+                                                       value="{{ user.user_facebook }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {#    <div class="col-md-12 mt-5 w-100 text-center p-5">#}
+    {#        <h1 class="display-4 text-light">Page under construction</h1>#}
+    {#        <p class="lead text-light">You can visit <a class="text-decoration-none" href="/">main page</a></p>#}
+    {#    </div>#}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/profile.js' %}"></script>
+{% endblock %}

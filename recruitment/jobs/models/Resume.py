@@ -5,7 +5,9 @@ class Resume(models.Model):
     title = models.CharField(max_length=255)
     salary = models.FloatField()
     skills = models.ManyToManyField("Skill", related_name="resumes", blank=True)
-    author = models.ForeignKey("User", on_delete=models.CASCADE)
+    author = models.OneToOneField(
+        "account.User", on_delete=models.CASCADE, related_name="resume"
+    )
     phone_number = models.CharField(max_length=20)
 
     experience = models.TextField()
@@ -16,3 +18,7 @@ class Resume(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name_plural = "Resumes"
+        ordering = ["title"]

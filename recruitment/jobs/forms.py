@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django import forms
 from jobs.models import Vacancy
+from jobs.models.Resume import Resume
 
 
 class SearchJobForm(forms.Form):
@@ -64,4 +65,20 @@ class CreateVacancyForm(forms.ModelForm):
             "experience_time",
             "possibilities",
             "skills",
+        )
+
+
+class CreateResumeForm(forms.ModelForm):
+    class Meta:
+        model = Resume
+        fields = (
+            "title",
+            "salary",
+            "skills",
+            "phone_number",
+            "experience",
+            "education",
+            "achievements",
+            "hobbies",
+            "additional_info",
         )

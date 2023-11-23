@@ -1,6 +1,7 @@
 import datetime
 import logging
 
+from account.models import User
 from django.core.paginator import EmptyPage
 from django.core.paginator import Page
 from django.core.paginator import Paginator
@@ -29,7 +30,12 @@ def get_all_vacancies():
 
 
 def get_vacancies_by_filter(
-    query: str = "", location: str = "", salary: int = 0, page: int = 1
+    user: User,
+    query: str = "",
+    location: str = "",
+    salary: int = 0,
+    page: int = 1,
+    only_favorites=False,
 ) -> Page:
     """
     Get vacancies by filter
@@ -54,12 +60,20 @@ def get_vacancies_by_filter(
     salary = int(salary) if salary else 0
     try:
         q_salary = int(salary * 0.8) if salary else -1
-        vacancies = Vacancy.objects.filter(
-            published_at__lte=datetime.date.today(),
-            title__contains=query,
-            location__contains=location,
-            salary_min__gte=q_salary,
-        ).order_by("-published_at")
+        if only_favorites and user.is_authenticated:
+            vacancies = user.favorite_jobs.filter(
+                published_at__lte=datetime.date.today(),
+                title__contains=query,
+                location__contains=location,
+                salary_min__gte=q_salary,
+            ).order_by("-published_at")
+        else:
+            vacancies = Vacancy.objects.filter(
+                published_at__lte=datetime.date.today(),
+                title__contains=query,
+                location__contains=location,
+                salary_min__gte=q_salary,
+            ).order_by("-published_at")
         paginator = Paginator(vacancies, 20)
     except EmptyPage:
         raise

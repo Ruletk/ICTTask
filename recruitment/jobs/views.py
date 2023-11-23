@@ -40,14 +40,17 @@ def possibilities_detail(request, possibility_slug):
 
 
 def search(request):
-    query, location, salary, page = (
+    query, location, salary, page, only_favorites = (
         request.GET.get("query", ""),
         request.GET.get("location", ""),
         request.GET.get("salary", 0),
         request.GET.get("page", 1),
+        request.GET.get("favorite", False),
     )
     try:
-        vacancies = get_vacancies_by_filter(query, location, salary, page)
+        vacancies = get_vacancies_by_filter(
+            request.user, query, location, salary, page, only_favorites
+        )
     except EmptyPage:
         return HttpResponse("")
     context = {"vacancies": vacancies.object_list}

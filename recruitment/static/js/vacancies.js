@@ -46,14 +46,17 @@ function initSearch() {
     let query = urlParams.get('query');
     let location = urlParams.get('location');
     let salary = urlParams.get('salary');
+    let favorite = urlParams.get('favorite') === "true";
 
     let searchQuery = $("#search_query");
     let searchLocation = $("#search_location");
     let searchSalary = $("#search_salary");
+    let searchFavorite = $("#search_favorite");
 
     if (query) searchQuery.val(decodeURIComponent(query));
     if (location) searchLocation.val(decodeURIComponent(location));
     if (salary) searchSalary.val(decodeURIComponent(salary));
+    if (favorite) searchFavorite.prop('checked', favorite);
 
     function handleInput() {
         clearTimeout(searchTimeout);
@@ -63,12 +66,15 @@ function initSearch() {
     searchQuery.on("input", handleInput);
     searchLocation.on("input", handleInput);
     searchSalary.on("input", handleInput);
+    searchFavorite.on("input", handleInput);
 }
 
 function submitForm() {
     let query = $("#search_query").val();
     let location = $("#search_location").val();
     let salary = $("#search_salary").val();
+    let favorite = $("#search_favorite").is(":checked");
+    console.log(favorite);
 
     if (salary !== "") {
         if (isNaN(salary) || salary < 0) {
@@ -84,6 +90,8 @@ function submitForm() {
     if (query) params.append("query", encodeURIComponent(query));
     if (location) params.append("location", encodeURIComponent(location));
     if (salary) params.append("salary", encodeURIComponent(salary));
+    if (favorite) params.append("favorite", encodeURIComponent(favorite));
+
     params.append("page", 1);
 
     let url = baseURL + "/search?" + params.toString();
@@ -106,22 +114,26 @@ function submitForm() {
 function loadMoreData() {
     if (stop) return;
 
-    let params = new URLSearchParams({ page: page });
-    ["query", "location", "salary"].forEach(key => {
-        let value = $(`#search_${key}`).val();
-        if (value) params.append(key, value);
+    let params = new URLSearchParams({
+        "page": page,
+        "query": $("#search_query").val(),
+        "location": $("#search_location").val(),
+        "salary": $("#search_salary").val(),
+        "favorite": $("#search_favorite").is(":checked")
     });
+
+    let ajax_load = $('.ajax-load');
 
     $.ajax({
         url: "/search?" + params.toString(),
         type: "get",
         beforeSend: function () {
-            $('.ajax-load').show();
+            ajax_load.show();
             page++;
         }
     })
         .done(function (data) {
-            $('.ajax-load').hide();
+            ajax_load.hide();
             if (data === "") {
                 $('.ajax-load').html("No more records found");
                 stop = true
@@ -138,3 +150,8 @@ $(window).scroll(function () {
         loadMoreData();
     }
 });
+
+
+$(document).ready(function () {
+    initSearch();
+}

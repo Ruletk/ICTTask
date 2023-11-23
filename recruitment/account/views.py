@@ -1,7 +1,13 @@
 import logging
 
+from account.forms import PasswordChangeForm
+from account.forms import UserEducationForm
 from account.forms import UserLoginForm
 from account.forms import UserRegisterForm
+from account.forms import UserSecurityForm
+from account.forms import UserSettingsForm
+from account.models import Education
+from account.models import User
 from django.contrib import messages
 from django.contrib.auth import login as base_login
 from django.contrib.auth import logout as base_logout
@@ -48,5 +54,91 @@ def register(request):
     return render(request, "account/register.html", {"form": form})
 
 
-def profile_detail(request, username):
-    return render(request, "account/profile_detail.html")
+def profile_detail(request, id):
+    user = User.objects.get(id=id)
+    context = {"user": user}
+    return render(request, "account/profile_detail.html", context)
+
+
+def profile(request):
+    context = {"user": request.user}
+    return render(request, "account/profile_detail.html", context)
+
+
+def profile_settings(request):
+    form = UserSettingsForm()
+    if request.method == "GET":
+        context = {"user": request.user, "form": form}
+        return render(request, "account/profile_settings.html", context)
+    form = UserSettingsForm(request.POST)
+    form.instance = request.user
+    if form.is_valid():
+        if request.FILES.get("avatar"):
+            request.user.avatar.delete()
+            request.user.avatar = request.FILES.get("avatar")
+        form.save()
+        messages.success(request, "You have successfully changed your settings.")
+        return redirect("account:profile")
+    else:
+        messages.error(request, "Something went wrong.")
+        context = {"user": request.user, "form": form}
+        return render(request, "account/profile_settings.html", context)
+
+
+def profile_education(request):
+    if request.method == "GET":
+        context = {
+            "user": request.user,
+            "form": UserEducationForm(),
+            "degrees": Education.DEGREES,
+        }
+        return render(request, "account/profile_education.html", context)
+    form = UserEducationForm(request.POST)
+    form.instance = request.user
+    if form.is_valid():
+        form.save()
+        messages.success(request, "You have successfully changed your education.")
+        return redirect("account:profile")
+    else:
+        messages.error(request, "Something went wrong.")
+        context = {"user": request.user, "form": form, "degrees": Education.DEGREES}
+        return render(request, "account/profile_education.html", context)
+
+
+def profile_security(request):
+    if request.method == "GET":
+        context = {
+            "user": request.user,
+            "form": UserSecurityForm(),
+            "password": PasswordChangeForm(),
+        }
+        return render(request, "account/profile_security.html", context)
+    redirected = False
+    password_form = PasswordChangeForm(request.POST)
+    form = UserSecurityForm(request.POST)
+    if password_form.is_valid():
+        password_form.instance = request.user
+        user = password_form.save()
+        base_login(request, user)
+        messages.success(request, "You have successfully changed your password.")
+        redirected = True
+    else:
+        messages.error(request, "Something went wrong.")
+        context = {"user": request.user, "form": form, "password_form": password_form}
+        return render(request, "account/profile_security.html", context)
+
+    if form.is_valid():
+        form.instance = request.user
+        form.save()
+        messages.success(
+            request, "You have successfully changed your security settings."
+        )
+        redirected = True
+
+    if redirected:
+        return redirect("account:profile")
+    return render(request, "account/profile_security.html")
+
+
+def profile_resume(request):
+    return render(request, "account/profile_resume.html")
