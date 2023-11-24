@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load user_tags %}
+{% load humanize %}
+
+{% block title %}
+    {{ user.username }}
+{% endblock %}
+
+{% block content %}
+    <section class="bg-dark text-white">
+        <div class="container py-5">
+
+            {% if user.is_authenticated and request.user == user %}
+                {% include 'snippets/user_navbar.html' %}
+            {% endif %}
+
+            <div class="row" id="profileWrapper">
+                <div class="d-flex justify-content-center flex-column align-items-center">
+                    <div class="col-lg-8">
+                        <div class="card mb-4 bg-dark text-light border-1 border-light">
+                            <div class="card-body text-center">
+                                <h4 class="my-3">Resume</h4>
+                            </div>
+                        </div>
+                        <div class="card mb-4 border-1 border-light bg-dark text-light">
+                            <div class="card-body">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <label for="id_title" class="form-label">Who are you?</label>
+                                            <input name="title" id="id_title" type="text"
+                                                   class="form-control bg-dark-2 text-light border-secondary {% if form.title.errors %}is-invalid{% endif %}"
+                                                   value="{{ user.resume.title }}">
+                                            {% if form.title.errors %}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.title.errors %}
+                                                        {{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-sm">
+                                            <label for="id_salary" class="form-label">Expected salary</label>
+                                            <div class="input-group">
+                                                <input name="salary" id="id_salary" type="text"
+                                                       class="form-control bg-dark-2 text-light border-secondary {% if form.salary.errors %}is-invalid{% endif %}"
+                                                       value="{{ user.resume.salary|floatformat:"0" }}">
+                                                <span class="input-group-text bg-dark-2 text-light fw-bold text-center">$</span>
+                                                {% if form.salary.errors %}
+                                                    <div class="invalid-feedback">
+                                                        {% for error in form.salary.errors %}
+                                                            {{ error }}
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <label for="id_skills" class="form-label">Skills</label>
+                                            <select multiple name="skills" id="id_skills"
+                                                    class="form-control bg-dark-2 text-light {% if form.skills.errors %}is-invalid{% endif %}">
+                                                {% for skill in form.skills.field.queryset %}
+                                                    <option value="{{ skill.id }}"
+                                                            {% if skill in user.resume.skills.value %}selected{% endif %}>{{ skill.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            {% if form.skills.errors %}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.skills.errors %}
+                                                        {{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col">
+                                            <label for="id_phone_number" class="form-label">Phone</label>
+                                            <small id="id_phone_number" class="form-text text-light-muted">
+                                                Leave blank if you want to use your phone number from profile
+                                            </small>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-dark-2 text-light fw-bold text-center">+</span>
+                                                <input name="phone_number" type="tel" id="id_phone_number"
+                                                       class="form-control bg-dark-2 text-light"
+                                                       value="{{ user.resume.phone_number }}">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <label for="id_experience" class="form-label">Experience</label>
+                                            <textarea name="experience" id="id_experience" cols="30" rows="10"
+                                                      class="form-control bg-dark-2 text-light">{{ user.resume.experience }}</textarea>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <label for="id_achievements" class="form-label">Achievments</label>
+                                            <textarea name="achievements" id="id_achievements" cols="30" rows="10"
+                                                      class="form-control bg-dark-2 text-light">{{ user.resume.achievements }}</textarea>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <label for="id_hobbies" class="form-label">Hobbies</label>
+                                            <textarea name="hobbies" id="id_hobbies" cols="30" rows="10"
+                                                      class="form-control bg-dark-2 text-light">{{ user.resume.hobbies }}</textarea>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <label for="id_additional_info" class="form-label">What employer should
+                                                know?</label>
+                                            <textarea name="additional_info" id="id_additional_info" cols="30" rows="10"
+                                                      class="form-control bg-dark-2 text-light">{{ user.resume.experience }}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <hr>
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {#    <div class="col-md-12 mt-5 w-100 text-center p-5">#}
+    {#        <h1 class="display-4 text-light">Page under construction</h1>#}
+    {#        <p class="lead text-light">You can visit <a class="text-decoration-none" href="/">main page</a></p>#}
+    {#    </div>#}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/profile.js' %}"></script>
+{% endblock %}

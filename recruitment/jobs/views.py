@@ -1,17 +1,20 @@
 import logging
 
+from django.contrib import messages
 from django.core.paginator import EmptyPage
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 from jobs.forms import CreateVacancyForm
 from jobs.services.vacancies import get_all_vacancies
 from jobs.services.vacancies import get_vacancies_by_filter
 from jobs.services.vacancies import get_vacancies_by_possibility
 from jobs.services.vacancies import get_vacancy_by_id
 from miscs.decorators import employer_only
+from miscs.decorators import login_required
 from miscs.decorators import worker_only
 
 # Create your views here.
@@ -107,3 +110,20 @@ def annihilate_database(request):
 
 def resumes(request):
     return render(request, "jobs/resumes_list.html")
+
+
+@csrf_exempt
+@login_required
+def vacancy_respond(request, vacancy_id):
+    vacancy = get_vacancy_by_id(vacancy_id)
+    if vacancy:
+        if getattr(request.user, "resume", None) is None:
+            messages.error(request, "You don't have a resume yet")
+            return redirect(reverse("accounts:profile_resume"))
+        if request.user.resume in vacancy.responded.all():
+            messages.info(request, "You have already responded to this vacancy")
+            return redirect(reverse("jobs:vacancy_detail", args=[vacancy_id]))
+        vacancy.responded.add(request.user.resume)
+        messages.success(request, "You have successfully responded to the vacancy")
+        return redirect(reverse("jobs:vacancy_detail", args=[vacancy_id]))
+    return redirect(reverse("jobs:index"))

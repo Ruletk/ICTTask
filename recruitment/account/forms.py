@@ -6,24 +6,14 @@ from django import forms
 class UserLoginForm(forms.Form):
     email = forms.EmailField(label="Email")
     password = forms.CharField(label="Password", widget=forms.PasswordInput)
-
-    class Meta:
-        model = User
-
-    def clean(self):
-        email = self.cleaned_data.get("email")
-        password = self.cleaned_data.get("password")
-        user = User.objects.filter(email=email).first()
-        if user and user.check_password(password):
-            return user
-        else:
-            raise forms.ValidationError("Invalid email or password")
+    remember = forms.BooleanField(label="Remember me", required=False)
 
 
 class UserRegisterForm(forms.Form):
     email = forms.EmailField(label="Email")
     password = forms.CharField(label="Password", widget=forms.PasswordInput)
     password2 = forms.CharField(label="Password2", widget=forms.PasswordInput)
+    employer = forms.BooleanField(label="Employer", required=False)
 
     class Meta:
         model = User
@@ -46,8 +36,9 @@ class UserRegisterForm(forms.Form):
         username = self.cleaned_data.get("email").split("@")[0]
         email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password")
+        is_employer = self.cleaned_data.get("employer")
         user = User.objects.create_user(
-            username=username, email=email, password=password
+            username=username, email=email, password=password, is_employer=is_employer
         )
         return user
 

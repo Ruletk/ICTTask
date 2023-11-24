@@ -43,7 +43,7 @@
         </div>
     {% else %}
         <div class="fixed-bottom text-center bg-dark p-4 d-flex justify-content-between w-50 mx-auto border rounded-top-5 align-items-center">
-            <a href="" class="btn btn-primary btn-lg py-3 px-5">Respond</a>
+            <a href="/vacancy/respond/{{ vacancy.id }}" class="btn btn-primary btn-lg py-3 px-5" {% if user.resume in vacancy.responded.all %}disabled {% endif %}>Respond</a>
             <p class="text-light">This is a sample text</p>
             <a href="" class="btn btn-secondary btn-lg px-5 py-3">Call</a>
         </div>

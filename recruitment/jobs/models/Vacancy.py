@@ -30,6 +30,7 @@ class Vacancy(models.Model):
     )
     skills = models.ManyToManyField("Skill", related_name="vacancies", blank=True)
     company = models.ForeignKey("Company", on_delete=models.CASCADE)
+    responded = models.ManyToManyField("Resume", related_name="vacancy", blank=True)
 
     @staticmethod
     def get_all():

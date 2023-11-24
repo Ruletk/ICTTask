@@ -13,5 +13,5 @@ urlpatterns = [
     path("profile/education/", views.profile_education, name="profile_education"),
     path("profile/security/", views.profile_security, name="profile_security"),
     path("profile/resume/", views.profile_resume, name="profile_resume"),
-    path("profile/<int:id>/", views.profile_detail, name="profile_detail"),
+    path("profile/<int:user_id>/", views.profile_detail, name="profile_detail"),
 ]

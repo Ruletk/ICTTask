@@ -1,4 +1,4 @@
-let page = 2;
+let page_num = 2;
 let stop = false;
 
 
@@ -74,7 +74,6 @@ function submitForm() {
     let location = $("#search_location").val();
     let salary = $("#search_salary").val();
     let favorite = $("#search_favorite").is(":checked");
-    console.log(favorite);
 
     if (salary !== "") {
         if (isNaN(salary) || salary < 0) {
@@ -102,7 +101,7 @@ function submitForm() {
         .done(function (data) {
             $('#vacancies').html(data);
             stop = false;
-            page = 2;
+            page_num = 2;
         })
         .fail(function (error) {
             createNotification("error", "Error while searching vacancies.");
@@ -113,14 +112,14 @@ function submitForm() {
 
 function loadMoreData() {
     if (stop) return;
-
-    let params = new URLSearchParams({
-        "page": page,
-        "query": $("#search_query").val(),
-        "location": $("#search_location").val(),
-        "salary": $("#search_salary").val(),
-        "favorite": $("#search_favorite").is(":checked")
-    });
+    let params = new URLSearchParams();
+    params.append("page", page_num);
+    if ($('#searchBar').length) {
+        params.append("query", $('#search_query').val());
+        params.append("location", $('#search_location').val());
+        params.append("salary", $('#search_salary').val());
+        params.append("favorite", $('#search_favorite').is(":checked"));
+    }
 
     let ajax_load = $('.ajax-load');
 
@@ -129,7 +128,7 @@ function loadMoreData() {
         type: "get",
         beforeSend: function () {
             ajax_load.show();
-            page++;
+            page_num++;
         }
     })
         .done(function (data) {
@@ -141,17 +140,16 @@ function loadMoreData() {
                 $("#vacancies").append(data);
         })
         .fail(function (jqXHR, ajaxOptions, thrownError) {
-            alert('server not responding...');
+
         });
 }
 
-$(window).scroll(function () {
-    if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
-        loadMoreData();
-    }
-});
 
-
-$(document).ready(function () {
+jQuery(document).ready(function () {
+    $(window).scroll(function () {
+        if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
+            loadMoreData();
+        }
+    });
     initSearch();
-}
+});

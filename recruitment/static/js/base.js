@@ -62,44 +62,25 @@ function appendCookie(name, value) {
     document.cookie = name + "=" + value + ";";
 }
 
-let userTypeSwitcher = $("#flexSwitchCheckDefault");
-if (userTypeSwitcher !== null) {
-    userTypeSwitcher.on("change", function (event) {
-        $('#switchTypeLabel').text(this.checked ? 'I am Employer' : 'I am Worker');
-
-        $.ajax({
-            url: "/api/switch_user_profile",
-            type: "POST",
-            headers: headers,
-            data: JSON.stringify({"type": userTypeSwitcher.prop('checked')}),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (data) {
-                if (data.type) {
-                    userTypeSwitcher.prop('checked', true);
-                    document.cookie = "type=1";
-                    setTimeout(function () {
-                        window.location.href = "/employer"
-                    }, 500);
-                } else {
-                    userTypeSwitcher.prop('checked', false);
-                    document.cookie = "type=0";
-                    setTimeout(function () {
-                        window.location.href = "/"
-                    }, 500);
-                }
-            },
-            error: function (error) {
-                createNotification("alert", "Error while switching profile.");
-            }
+function respondButton(vacancy_id) {
+    $.ajax({
+        url: baseURL + "/vacancy/respond/" + vacancy_id,
+        type: "post",
+        headers: headers,
+        beforeSend: function () {
+            $("#respondButton").prop("disabled", true);
+        }
+    })
+        .done(function (data) {
+            $("#respondButton").prop("disabled", false);
+            createNotification("success", "You have successfully responded to the vacancy.");
+            $("#respondButton").hide();
+        })
+        .fail(function (jqXHR, ajaxOptions, thrownError) {
+            $("#respondButton").prop("disabled", false);
+            createNotification("error", "Error while responding to the vacancy.");
         });
-    });
 }
-
-
-document.getElementById('theme-switch').addEventListener('change', function (event) {
-    document.body.classList.toggle('dark-mode', event.target.checked);
-});
 
 
 $(document).ready(function() {

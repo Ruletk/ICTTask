@@ -1,24 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
-</head>
-<body>
-    <div class="login-container">
-        <form class="login" method="post">
-            <a class="go-back" href="{% url 'jobs:index' %}">Go Back</a>
-            {% csrf_token %}
-            <p class="loginp">Login</p>
-            <p class="info">Email or phone number</p>
-            <input type="email" name="email" class="textbox">
-            <p class="info">Password</p>
-            <input type="password" name="password" class="textbox">
-            <a class="forgot-password" href="#">Forgot password?</a>
-            <input class="login-btn" type="submit" value="Log In">
-        </form>
-    </div>
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+{% load user_tags %}
+{% load humanize %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block content %}
+    <section class="bg-dark text-white">
+        <div class="container py-5">
+            <div class="row">
+                <div class="d-flex justify-content-center flex-column align-items-center">
+                    <div class="col-lg-8">
+                        <div class="card mb-4 bg-dark text-light border-1 border-light">
+                            <div class="card-body text-center">
+                                <h4 class="my-3">Login</h4>
+                            </div>
+                        </div>
+                        <div class="card mb-4 border-1 border-light bg-dark text-light">
+                            <div class="card-body">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="row mb-4">
+                                        <div class="col-sm">
+                                            <label for="id_email" class="form-label">E-mail</label>
+                                            <input name="email" id="id_email" type="text"
+                                                   class="form-control bg-dark-2 text-light border-secondary {% if form.email.errors %}is-invalid{% endif %}">
+                                            {% if form.email.errors %}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.email.errors %}
+                                                        {{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <label for="id_password" class="form-label">Password</label>
+                                            <input name="password" id="id_password" type="password"
+                                                   class="form-control bg-dark-2 text-light border-secondary {% if form.password.errors %}is-invalid{% endif %}">
+                                            {% if form.password.errors %}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.password.errors %}
+                                                        {{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-sm">
+                                            <label for="id_password" class="form-label">Remember me?</label>
+                                            <input name="remember" id="id_password" type="checkbox"
+                                                   class="form-check-input bg-dark-2 text-light border-secondary">
+                                        </div>
+                                        <div class="col-sm right d-flex justify-content-end">
+                                            <a href="" class="text-decoration-none right">Forgot password?</a>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mt-5 w-25 mx-auto">Login</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

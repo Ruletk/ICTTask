@@ -1,29 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load user_tags %}
+{% load humanize %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
-</head>
-<body>
-    <div class="login-container">
-        <form class="login" method="post">
-            <a class="go-back" href="{% url 'jobs:index' %}">Go Back</a>
-            {% csrf_token %}
-            <p class="loginp">Registration</p>
-            <p class="info">Email or phone number</p>
-            <input type="email" name="email" class="textbox">
+{% block title %}
+    Registration
+{% endblock %}
 
-            <p class="info">Password</p>
-            <input type="password" name="password" class="textbox">
+{% block content %}
+    <section class="bg-dark text-white">
+        <div class="container py-5">
+            <div class="row">
+                <div class="d-flex justify-content-center flex-column align-items-center">
+                    <div class="col-lg-8">
+                        <div class="card mb-4 bg-dark text-light border-1 border-light">
+                            <div class="card-body text-center">
+                                <h4 class="my-3">Registration</h4>
+                            </div>
+                        </div>
+                        <div class="card mb-4 border-1 border-light bg-dark text-light">
+                            <div class="card-body">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="row mb-4">
+                                        <div class="col-sm">
+                                            <label for="id_email" class="form-label">E-mail</label>
+                                            <input name="email" id="id_email" type="text"
+                                                   class="form-control bg-dark-2 text-light border-secondary {% if form.email.errors %}is-invalid{% endif %}">
+                                            {% if form.email.errors %}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.email.errors %}
+                                                        {{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-sm">
+                                            <label for="id_password" class="form-label">Password</label>
+                                            <input name="password" id="id_password" type="password"
+                                                   class="form-control bg-dark-2 text-light border-secondary {% if form.password.errors %}is-invalid{% endif %}">
+                                            {% if form.password.errors %}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.password.errors %}
+                                                        {{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <label for="id_password2" class="form-label">Repeat Password</label>
+                                            <input name="password2" id="id_password2" type="password"
+                                                   class="form-control bg-dark-2 text-light border-secondary {% if form.password2.errors %}is-invalid{% endif %}">
+                                            {% if form.password2.errors %}
+                                                <div class="invalid-feedback">
+                                                    {% for error in form.password2.errors %}
+                                                        {{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="row mt-5">
+                                        <div class="col-sm">
+                                            <div class="d-flex align-items-center">
+                                                <div>
+                                                    <label for="id_employer" class="form-label">I am Worker</label>
+                                                </div>
+                                                <div class="form-switch mx-1">
+                                                    <input name="employer" id="id_employer" type="checkbox"
+                                                           role="switch"
+                                                           class="form-check-input bg-dark-2 text-light border-secondary {% if form.password2.errors %}is-invalid{% endif %}">
+                                                </div>
+                                                <div>
+                                                    <label for="id_employer" class="form-label">I am Employer</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-            <p class="info">Repeat Password</p>
-            <input type="password" name="password2" class="textbox">
+                                    <button type="submit" class="btn btn-primary mt-5 w-25 mx-auto">Register</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
 
-            <input class="login-btn" type="submit" value="Register">
-        </form>
-    </div>
-</body>
-</html>
+{% block scripts %}
+{% endblock %}

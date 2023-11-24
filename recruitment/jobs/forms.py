@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django import forms
+from jobs.models import Skill
 from jobs.models import Vacancy
 from jobs.models.Resume import Resume
 
@@ -32,7 +33,6 @@ class CreateVacancyForm(forms.ModelForm):
         value = 0
         for i in data:
             value += 2 ** (6 - int(i))
-        print(value)
         return value
 
     def save(self, commit=True):
@@ -68,17 +68,46 @@ class CreateVacancyForm(forms.ModelForm):
         )
 
 
-class CreateResumeForm(forms.ModelForm):
-    class Meta:
-        model = Resume
-        fields = (
-            "title",
-            "salary",
-            "skills",
-            "phone_number",
-            "experience",
-            "education",
-            "achievements",
-            "hobbies",
-            "additional_info",
+class CreateResumeForm(forms.Form):
+    instance = None
+
+    title = forms.CharField(max_length=255)
+    salary = forms.FloatField()
+    skills = forms.ModelMultipleChoiceField(
+        queryset=Skill.objects.all(), required=False
+    )
+    phone_number = forms.CharField(max_length=20, required=False)
+    experience = forms.CharField(widget=forms.Textarea)
+    achievements = forms.CharField(widget=forms.Textarea)
+    hobbies = forms.CharField(widget=forms.Textarea)
+    additional_info = forms.CharField(widget=forms.Textarea)
+
+    def clean_salary(self):
+        data = self.cleaned_data["salary"]
+        if data < 0:
+            raise forms.ValidationError("Salary must be positive")
+        return data
+
+    def save(self, commit=True):
+        if getattr(self, "instance", None) is None:
+            raise ValueError("User is not set")
+        if getattr(self.instance, "resume", None) is None:
+            resume = Resume()
+        else:
+            resume = self.instance.resume
+        resume.title = self.cleaned_data["title"]
+        resume.salary = self.cleaned_data["salary"]
+        resume.phone_number = (
+            self.cleaned_data["phone_number"] or self.instance.phone_number
         )
+        resume.experience = self.cleaned_data["experience"]
+        resume.education = ""
+        resume.achievements = self.cleaned_data["achievements"]
+        resume.hobbies = self.cleaned_data["hobbies"]
+        resume.additional_info = self.cleaned_data["additional_info"]
+        resume.author = self.instance
+        resume.save()
+
+        resume.skills.set(self.cleaned_data["skills"])
+        resume.save()
+        return resume

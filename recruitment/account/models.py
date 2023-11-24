@@ -21,7 +21,9 @@ class User(AbstractUser):
 
     patronymic = models.CharField(max_length=255, blank=True)
 
-    avatar = models.ImageField(upload_to=user_avatar_path, blank=True)
+    avatar = models.ImageField(
+        upload_to=user_avatar_path, blank=True, default="avatars/0/avatar.webp"
+    )
     phone_number = models.CharField(max_length=255)
     address = models.CharField(max_length=255, blank=True)
     favorite_jobs = models.ManyToManyField("jobs.Vacancy", blank=True)
