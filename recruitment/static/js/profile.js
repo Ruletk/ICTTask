@@ -1,5 +1,6 @@
 $(document).ready(function () {
     setupNavigationButtons();
+    $('#id_skills').bootstrapDualListbox();
 });
 
 

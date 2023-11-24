@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+
+
 {% block content %}
     <div class="d-flex justify-content-center align-items-center mb-5 flex-grow-1 py-5">
         <div class="w-50 center text-light">
@@ -83,18 +85,18 @@
                     <small id="experienceHelp" class="form-text text-white-50">Type time in years</small>
                 </div>
 
-                <div class="p-2">
+                <div class="p-2 mt-5">
                     <label for="id_possibilities" class="text-light">Possibilities</label>
-                    <select multiple name="possibilities" class="form-control bg-dark text-light" id="id_possibilities">
+                    <select size="10" multiple name="possibilities" class="form-control bg-dark text-light" id="id_possibilities">
                         {% for possibility in form.possibilities.field.queryset %}
                             <option value="{{ possibility.id }}">{{ possibility.name }}</option>
                         {% endfor %}
                     </select>
 
                 </div>
-                <div class="p-2">
+                <div class="p-2 mt-5">
                     <label for="id_skills" class="text-light">Required skills</label>
-                    <select multiple name="skills" class="form-control bg-dark text-light" id="id_skills">
+                    <select size="10" multiple name="skills" class="form-control bg-dark text-light" id="id_skills">
                         {% for skill in form.skills.field.queryset %}
                             <option value="{{ skill.id }}">{{ skill.name }}</option>
                         {% endfor %}
@@ -106,4 +108,22 @@
             </form>
         </div>
     </div>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap4-duallistbox@4.0.1/dist/bootstrap-duallistbox.min.css">
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap4-duallistbox@4.0.1/dist/jquery.bootstrap-duallistbox.min.js"></script>
+    <script>
+    $(document).ready(function () {
+        $('#id_possibilities').bootstrapDualListbox({
+        });
+        $('#id_skills').bootstrapDualListbox({
+
+        });
+    });
+    </script>
 {% endblock %}

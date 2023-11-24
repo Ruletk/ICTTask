@@ -25,3 +25,41 @@
 /*.bg-dark {*/
 /*    background-color: #242627 !important;*/
 /*}*/
+
+.bootstrap-duallistbox-container {
+    background-color: #212529;
+    color: #fff;
+}
+
+.bootstrap-duallistbox-nonselected-list,
+.bootstrap-duallistbox-selected-list {
+    border: 1px solid #555; /* Граница списка */
+    background-color: #333; /* Цвет фона списка */
+}
+
+/* Стили для отдельных элементов списка */
+.bootstrap-duallistbox-item {
+    color: #fff; /* Цвет текста элемента */
+    background-color: #333; /* Цвет фона элемента */
+    border: 1px solid #555; /* Граница элемента */
+}
+
+#bootstrap-duallistbox-nonselected-list_skills {
+    background-color: #212529;
+    color: #fff;
+}
+
+#bootstrap-duallistbox-selected-list_skills {
+    background-color: #212529;
+    color: #fff;
+}
+
+#bootstrap-duallistbox-nonselected-list_possibilities {
+    background-color: #212529;
+    color: #fff;
+}
+
+#bootstrap-duallistbox-selected-list_possibilities {
+    background-color: #212529;
+    color: #fff;
+}

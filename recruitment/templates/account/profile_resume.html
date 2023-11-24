@@ -61,11 +61,11 @@
                                     <div class="row">
                                         <div class="col">
                                             <label for="id_skills" class="form-label">Skills</label>
-                                            <select multiple name="skills" id="id_skills"
+                                            <select size="10" multiple name="skills" id="id_skills"
                                                     class="form-control bg-dark-2 text-light {% if form.skills.errors %}is-invalid{% endif %}">
                                                 {% for skill in form.skills.field.queryset %}
                                                     <option value="{{ skill.id }}"
-                                                            {% if skill in user.resume.skills.value %}selected{% endif %}>{{ skill.name }}</option>
+                                                            {% if skill in user.resume.skills.all %}selected{% endif %}>{{ skill.name }}</option>
                                                 {% endfor %}
                                             </select>
                                             {% if form.skills.errors %}
@@ -143,6 +143,13 @@
     {#    </div>#}
 {% endblock %}
 
+{% block css %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap4-duallistbox@4.0.1/dist/bootstrap-duallistbox.min.css">
+
+{% endblock %}
+
 {% block scripts %}
-    <script src="{% static 'js/profile.js' %}"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap4-duallistbox@4.0.1/dist/jquery.bootstrap-duallistbox.min.js"></script>
+<script src="{% static 'js/profile.js' %}"></script>
 {% endblock %}
